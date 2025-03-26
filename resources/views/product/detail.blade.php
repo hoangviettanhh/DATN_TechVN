@@ -39,14 +39,13 @@
             <div class="options">
                 <label for="quantity">Số lượng:</label>
                 <div class="quantity-container">
-                    <button onclick="changeQuantity(-1)">−</button>
+{{--                    <button onclick="changeQuantity(-1)">−</button>--}}
                     <input type="number" id="quantity" value="1" min="1">
-                    <button onclick="changeQuantity(1)">+</button>
+{{--                    <button onclick="changeQuantity(1)">+</button>--}}
                 </div>
             </div>
             <div class="button-container">
-                <button class="buy-button">Mua ngay</button>
-{{--                <button class="cart-button">+</button>--}}
+                <button class="add-to-cart-button" onclick="addToCart({{ $product->id_product }})">Thêm vào giỏ hàng</button>
             </div>
         </div>
     </div>
@@ -74,21 +73,21 @@
     <!-- Phần mô tả sản phẩm -->
     <main>
         <section class="news-content">
-            <h2>iPhone 16 Pro Max - Mở ra kỷ nguyên mới của sự hoàn hảo</h2> <br>
-            <p>iPhone 16 Pro Max là biểu tượng của sự đổi mới, thể hiện đẳng cấp và sự hiện đại bậc nhất trong trong thế giới smartphone. Với thiết kế tinh xảo và công nghệ tiên tiến, chiếc điện thoại này mang đến hiệu suất vượt trội cùng trải nghiệm người dùng hoàn hảo. Dòng sản phẩm này không chỉ đáp ứng nhu cầu công việc và giải trí mà còn mở ra khả năng sáng tạo không giới hạn. Dòng máy này được trang bị camera tiên tiến với các tính năng chụp ảnh và quay video đẳng cấp, cùng với các thông tin cải tiến về bảo mật và kết nối linh hoạt.</p>
-            <p>Tìm hiểu về <a href='https://clickbuy.com.vn/iphone-16-series'>iPhone 16 Pro Max</a></p> <br>
-            <img src="/image/iphone-16-pro-max-1.jpg" alt="iPhone 16 Pro Max">
-            <h3>Tại sao nên mua iPhone 16 Pro Max tại TechVN?</h3> <br>
+            <h2>{{ $product->name }} - Mở ra kỷ nguyên mới của sự hoàn hảo</h2> <br>
+            <p>{{ $product->name }} là biểu tượng của sự đổi mới, thể hiện đẳng cấp và sự hiện đại bậc nhất trong trong thế giới smartphone. Với thiết kế tinh xảo và công nghệ tiên tiến, chiếc điện thoại này mang đến hiệu suất vượt trội cùng trải nghiệm người dùng hoàn hảo. Dòng sản phẩm này không chỉ đáp ứng nhu cầu công việc và giải trí mà còn mở ra khả năng sáng tạo không giới hạn. Dòng máy này được trang bị camera tiên tiến với các tính năng chụp ảnh và quay video đẳng cấp, cùng với các thông tin cải tiến về bảo mật và kết nối linh hoạt.</p>
+            <p>Tìm hiểu về <a href='https://clickbuy.com.vn/iphone-16-series'>{{ $product->name }}</a></p> <br>
+            <img src="{{ asset('image/' . $product->image) }}" alt="{{ $product->name }}">
+            <h3>Tại sao nên mua {{ $product->name }} tại TechVN?</h3> <br>
             <p>TechVN đi đầu cho những sản phẩm công nghệ chất lượng, hài lòng từ chất lượng đến dịch vụ. Chúng tôi không chỉ cung cấp những thiết bị điện tử chính hãng mà còn đem đến những dịch vụ và ưu đãi đặc biệt, từ bảo hành đến hỗ trợ sau bán hàng.</p><br>
             <h4>Là đại lý ủy quyền chính hãng của Apple tại Việt Nam</h4><br>
             <p>TechVN tự hào là đại lý ủy quyền của Apple, mang đến cho khách hàng những thiết bị chất lượng cao nhất. Khi mua sắm tại đây, khách hàng hoàn toàn yên tâm rằng mọi sản phẩm từ Apple đều được đảm bảo về nguồn gốc xuất xứ và chất lượng.</p><br>
             <h4>Dịch vụ bảo hành đặc biệt chỉ có tại TechVN</h4><br>
-            <img src="/image/iphone-16-plus-pro-max-9.jpg" alt="">
+            <img src="{{ asset('image/' . $product->image) }}" alt="{{ $product->name }}">
             <p>Chúng tôi không chỉ cung cấp bảo hành chính hãng mà còn bổ sung thêm các gói bảo hành đặc biệt. Khách hàng sẽ được tặng bảo hành rơi vỡ và vào nước trong 12 tháng, giúp bảo vệ thiết bị khỏi những sự cố không mong muốn. Hơn nữa, với gói bảo hành 1 đổi 1 trong 12 tháng, nếu máy gặp phải lỗi kỹ thuật, người mua có thể đổi máy mới nguyên seal mà không phải lo lắng về bất kỳ vấn đề nào. Chúng tôi cam kết mang đến sự bảo vệ toàn diện và dịch vụ hỗ trợ khách hàng tốt nhất có thể.</p><br>
             <h4>Vô vàn quà tặng - Ngập tràn ưu đãi</h4><br>
             <p>Mua sắm tại đây không chỉ mang lại những sản phẩm công nghệ chất lượng mà còn đi kèm với vô vàn quà tặng hấp dẫn. Khi đặt hàng, khách hàng sẽ được nhận sạc Aukey hoặc Anker 20W, giúp sạc thiết bị nhanh chóng và hiệu quả. Thêm vào đó, chúng tôi giảm giá 300.000đ cho khách hàng đã mua iPhone 15, giảm 500.000đ khi mua iPad, MacBook hoặc Apple Watch; giảm 300.000đ khi mua AirPods. Những ưu đãi này giúp người dùng tiết kiệm chi phí. Đồng thời nâng cao trải nghiệm mua sắm của khách hàng với những quà tặng giá trị và tiện ích.</p><br>
             <h4>Thu cũ đổi mới trợ giá tới 1.500.000đ đối với tất cả các khách hàng</h4><br>
-            <img src="/image/iphone-16-pro-max-10.jpg" alt="">
+            <img src="{{ asset('image/' . $product->image) }}" alt="{{ $product->name }}">
             <p>Tại TechVN, chúng tôi hỗ trợ chương trình thu cũ đổi mới với trợ giá lên tới 1.500.000đ. Giúp người dùng tiết kiệm chi phí khi nâng cấp lên các thiết bị công nghệ mới nhất. Chỉ cần mang điện thoại cũ đến cửa hàng, chúng tôi sẽ hỗ trợ khách hàng bằng một khoản trợ giá hấp dẫn khi mua máy mới. Chúng tôi tin chắc đây sẽ là cơ hội tuyệt vời để người mua nâng cấp thiết bị của mình với chi phí vô cùng tiết kiệm.</p><br>
             <div class="review-container">
                 <div class="rating-section">
@@ -143,7 +142,7 @@
         <aside class="sidebar">
             <h3>Thông số kỹ thuật {{ $product->name }}</h3>
             <div class="image">
-                <img src="/image/iphone-16-pro-max-1219-cycq-300x300-217855.jpg" alt="" width="200px">
+                <img src="{{ asset('image/' . $product->image) }}" alt="{{ $product->name }}" width="200px">
             </div>
             <ul>
                 <li><strong>Kích thước màn hình:</strong> 6.9 inch</li>
@@ -302,43 +301,6 @@
             display: flex;
             gap: 10px;
             margin-top: 20px;
-        }
-
-        .buy-button {
-            flex: 9;
-            padding: 12px;
-            background-color: #d9534f;
-            color: white;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .buy-button:hover {
-            background-color: #c9302c;
-        }
-
-        .cart-button {
-            flex: 1;
-            padding: 12px;
-            background-color: #fff;
-            color: #d9534f;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            border: 2px solid #d9534f;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background 0.3s, color 0.3s;
-        }
-
-        .cart-button:hover {
-            background-color: #d9534f;
-            color: white;
         }
 
         /* Sản phẩm tương tự */
@@ -598,79 +560,124 @@
         }
     </style>
 
-{{--    <script>--}}
-{{--        let images = document.querySelectorAll(".thumbnail");--}}
-{{--        let mainImage = document.getElementById("main-image");--}}
-{{--        let currentIndex = 0;--}}
+    <script>
+        let images = document.querySelectorAll(".thumbnail");
+        let mainImage = document.getElementById("main-image");
+        let currentIndex = 0;
 
-{{--        function changeImage(element) {--}}
-{{--            mainImage.src = element.src;--}}
-{{--            images.forEach(img => img.classList.remove("active"));--}}
-{{--            element.classList.add("active");--}}
-{{--            currentIndex = Array.from(images).indexOf(element);--}}
-{{--        }--}}
+        function changeImage(element) {
+            mainImage.src = element.src;
+            images.forEach(img => img.classList.remove("active"));
+            element.classList.add("active");
+            currentIndex = Array.from(images).indexOf(element);
+        }
 
-{{--        function prevImage() {--}}
-{{--            currentIndex = (currentIndex - 1 + images.length) % images.length;--}}
-{{--            images[currentIndex].click();--}}
-{{--        }--}}
+        function prevImage() {
+            currentIndex = (currentIndex - 1 + images.length) % images.length;
+            images[currentIndex].click();
+        }
 
-{{--        function nextImage() {--}}
-{{--            currentIndex = (currentIndex + 1) % images.length;--}}
-{{--            images[currentIndex].click();--}}
-{{--        }--}}
+        function nextImage() {
+            currentIndex = (currentIndex + 1) % images.length;
+            images[currentIndex].click();
+        }
 
-{{--        function changeQuantity(amount) {--}}
-{{--            let input = document.getElementById('quantity');--}}
-{{--            let currentValue = parseInt(input.value);--}}
-{{--            let newValue = currentValue + amount;--}}
-{{--            if (newValue >= parseInt(input.min)) {--}}
-{{--                input.value = newValue;--}}
-{{--            }--}}
-{{--        }--}}
+        function changeQuantity(amount) {
+            let input = document.getElementById('quantity');
+            let currentValue = parseInt(input.value);
+            let newValue = currentValue + amount;
+            if (newValue >= parseInt(input.min)) {
+                input.value = newValue;
+            }
+        }
 
-{{--        document.addEventListener("DOMContentLoaded", function () {--}}
-{{--            const sidebar = document.querySelector(".sidebar");--}}
-{{--            const newsContent = document.querySelector(".news-content");--}}
-{{--            const main = document.querySelector("main");--}}
-{{--            const sidebarWrapper = document.createElement("div");--}}
+        function addToCart(productId) {
+            const storage = document.getElementById('storage').value;
+            const color = document.getElementById('color').value;
+            const quantity = parseInt(document.getElementById('quantity').value);
 
-{{--            main.style.display = "flex";--}}
-{{--            main.style.gap = "30px";--}}
-{{--            main.style.alignItems = "flex-start";--}}
+            fetch('/cart/add', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    storage: storage,
+                    color: color,
+                    quantity: quantity,
+                    name: '{{ $product->name }}',
+                    image: '{{ $product->image }}',
+                    price: {{ $product->price }}
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showNotification('Đã thêm sản phẩm vào giỏ hàng', 'success');
+                    updateCartCount(data.cartCount);
+                    setTimeout(() => {
+                    location.reload();
+                }, 1500);
+                } else {
+                    showNotification('Có lỗi xảy ra', 'error');
+                }
+            })
+            .catch(error => {
+                showNotification('Có lỗi xảy ra', 'error');
+            });
+        }
 
-{{--            newsContent.style.flex = "7";--}}
-{{--            sidebarWrapper.style.flex = "3";--}}
-{{--            sidebarWrapper.style.maxWidth = "30%";--}}
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
 
-{{--            sidebar.parentNode.insertBefore(sidebarWrapper, sidebar);--}}
-{{--            sidebarWrapper.appendChild(sidebar);--}}
-{{--            sidebarWrapper.style.position = "relative";--}}
-{{--            sidebarWrapper.style.width = `${sidebar.offsetWidth}px`;--}}
-{{--            sidebarWrapper.style.height = `${sidebar.offsetHeight}px`;--}}
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
 
-{{--            function handleSidebarScroll() {--}}
-{{--                const sidebarHeight = sidebar.offsetHeight;--}}
-{{--                const newsContentHeight = newsContent.offsetHeight;--}}
-{{--                const mainTop = main.offsetTop;--}}
-{{--                const scrollY = window.scrollY;--}}
-{{--                const sidebarFixedTop = 10;--}}
-{{--                const maxSidebarScroll = mainTop + newsContentHeight - sidebarHeight;--}}
+        function updateCartCount(count) {
+            const cartCount = document.querySelector('.cart-count');
+            if (cartCount) {
+                cartCount.textContent = count;
+            }
+        }
+    </script>
 
-{{--                if (scrollY >= mainTop - sidebarFixedTop && scrollY < maxSidebarScroll) {--}}
-{{--                    sidebar.style.position = "fixed";--}}
-{{--                    sidebar.style.top = `${sidebarFixedTop}px`;--}}
-{{--                    sidebar.style.width = `${sidebarWrapper.offsetWidth}px`;--}}
-{{--                } else if (scrollY >= maxSidebarScroll) {--}}
-{{--                    sidebar.style.position = "absolute";--}}
-{{--                    sidebar.style.top = (newsContentHeight - sidebarHeight) + "px";--}}
-{{--                } else {--}}
-{{--                    sidebar.style.position = "static";--}}
-{{--                }--}}
-{{--            }--}}
+    <style>
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 25px;
+            border-radius: 5px;
+            color: white;
+            font-weight: bold;
+            z-index: 1000;
+            animation: slideIn 0.3s ease-out;
+        }
 
-{{--            window.addEventListener("scroll", handleSidebarScroll);--}}
-{{--            window.addEventListener("resize", handleSidebarScroll);--}}
-{{--        });--}}
-{{--    </script>--}}
+        .notification.success {
+            background-color: #28a745;
+        }
+
+        .notification.error {
+            background-color: #dc3545;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
 @endsection

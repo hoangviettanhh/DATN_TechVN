@@ -2,37 +2,67 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductRequest;
+use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class AdminController extends Controller
 {
     public function create()
     {
-        return view('admin.products.create');
+        $categories = Category::getCategories();
+        $products = Product::getProducts();
+        return view('admin.products.create', compact('categories', 'products'));
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'price' => 'required|numeric',
-            'image' => 'required|image',
-        ]);
+        $product = new Product();
+        $product->id_category = $request->id_category;
+        $product->name = $request->name;
+        $product->price = $request->price;
+        $product->old_price = $request->old_price ?? 0;
+        $product->storage = $request->storage;
+        $product->color = $request->color;
+        $product->description = $request->description;
+        $product->quantity = $request->quantity;
+        $product->created_by = Auth::id();
+        $product->updated_by = Auth::id();
+        $product->save();
 
-        $imagePath = $request->file('image')->store('products', 'public');
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            // Lấy tên file gốc và lưu vào thư mục public/image
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('image'), $imageName);
 
-        Product::create([
-            'name' => $request->name,
-            'price' => $request->price,
-            'old_price' => $request->old_price,
-            'image' => $imagePath,
-            'description' => $request->description,
-            'quantity' => $request->quantity,
-            'storage' => $request->storage,
-            'color' => $request->color,
-        ]);
+            // Lưu tên file vào bảng product_images
+            ProductImage::create([
+                'id_product' => $product->id_product,
+                'image' => $imageName,
+            ]);
+        }
 
-        return redirect()->route('admin.products.create')->with('success', 'Thêm sản phẩm thành công!');
+        return redirect()->route('admin.products.create')->with('success', 'Sản phẩm đã được thêm thành công!');
+    }
+
+    public function addImage(Request $request)
+    {
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imageName = time() . '_' . $image->getClientOriginalName();
+            $image->move(public_path('image'), $imageName);
+
+            ProductImage::create([
+                'id_product' => $request->product_id,
+                'image' => $imageName,
+            ]);
+        }
+
+        return redirect()->route('admin.products.create')->with('success', 'Hình ảnh đã được thêm thành công!');
     }
 }

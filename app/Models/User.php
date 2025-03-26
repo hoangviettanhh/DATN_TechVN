@@ -6,11 +6,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable, SoftDeletes;
+
+    protected $primaryKey = 'id_user';
 
     /**
      * The attributes that are mass assignable.
@@ -18,9 +22,15 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'id_role',
         'name',
         'email',
+        'phone',
+        'avatar',
         'password',
+        'address',
+        'created_by',
+        'updated_by'
     ];
 
     /**
@@ -38,11 +48,20 @@ class User extends Authenticatable
      *
      * @return array<string, string>
      */
-    protected function casts(): array
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
+
+    protected $casts = [
+        'id_role' => 'integer',
+        'created_by' => 'integer',
+        'updated_by' => 'integer'
+    ];
+
+    public function isAdmin()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->id_role === 1; // Giả sử role_id 1 là admin
     }
 }

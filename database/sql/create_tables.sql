@@ -111,3 +111,15 @@ CREATE TABLE sessions (
                           INDEX sessions_user_id_index (user_id),
                           INDEX sessions_last_activity_index (last_activity)
 );
+
+CREATE TABLE IF NOT EXISTS `carts` (
+    `id_cart` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    `id_user` INT UNSIGNED NOT NULL,
+    `id_product` INT UNSIGNED NOT NULL,
+    `quantity` INT NOT NULL DEFAULT 1,
+    `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `deleted_at` TIMESTAMP NULL DEFAULT NULL,
+    FOREIGN KEY (`id_user`) REFERENCES `users`(`id_user`) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY (`id_product`) REFERENCES `products`(`id_product`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -65,17 +65,52 @@ class Product extends Model
 
         $products = $query->get();
 
-        // Lấy hình ảnh cho từng sản phẩm
+        // Lấy hình ảnh cho từng sản phẩm dưới dạng array
+        foreach ($products as $product) {
+            $images = DB::table('product_images')
+                ->where('id_product', '=', $product->id_product)
+                ->pluck('image') // Chỉ lấy cột image
+                ->toArray();     // Chuyển thành array
+
+            $product->images = $images;
+            $product->image = !empty($images) ? $images[0] : '/image/default.jpg'; // Lấy ảnh đầu tiên hoặc default
+        }
+
+        return $products;
+    }
+    public static function getProductsMappingCategory($limit = null, $categoryId = null)
+    {
+        $query = DB::table('products')
+            ->select('products.*', 'categories.name as category_name')
+            ->leftJoin('categories', 'products.id_category', '=', 'categories.id_category');
+
+        if ($categoryId) {
+            $query->where('products.id_category', '=', $categoryId);
+        }
+
+        if ($limit) {
+            $query->take($limit);
+        }
+
+        $products = $query->get();
+
+        $groupedProducts = [];
+
         foreach ($products as $product) {
             $product->images = DB::table('product_images')
                 ->where('id_product', '=', $product->id_product)
                 ->get();
             $product->image = $product->images->first()->image ?? '/image/default.jpg';
+
+            $categoryName = $product->category_name ?? 'Uncategorized';
+            if (!isset($groupedProducts[$categoryName])) {
+                $groupedProducts[$categoryName] = [];
+            }
+            $groupedProducts[$categoryName][] = $product;
         }
 
-        return $products;
+        return $groupedProducts;
     }
-
     // Lấy sản phẩm theo ID
     public static function getProduct($id)
     {
@@ -140,5 +175,9 @@ class Product extends Model
         }
 
         return $products;
+    }
+    public function productImages()
+    {
+        return $this->hasMany(ProductImage::class, 'id_product');
     }
 }
