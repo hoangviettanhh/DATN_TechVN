@@ -144,7 +144,7 @@
 
 .remove-item:hover {
     opacity: 1;
-    transform: scale(1.1);
+    /* transform: scale(1.1); */
 }
 
 .remove-item i {
@@ -197,7 +197,6 @@
 .clear-cart:hover {
     background: #dc3545;
     color: white;
-    transform: translateY(-2px);
     box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);
 }
 
@@ -327,7 +326,7 @@
 /* Add to cart button styles */
 
 .buy-button, .add-to-cart-button {
-    top : 69%;
+    top : 43%;
     padding: 12px 24px;
     border: none;
     border-radius: 5px;
@@ -485,4 +484,43 @@
 .qty-btn:hover {
     background: #d9534f;
     color: white;
+}
+
+.summary-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.clear-cart {
+    flex: 1;
+    padding: 0.75rem;
+    background-color: #f3f4f6;
+    color: #374151;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.clear-cart:hover {
+    background-color: #e5e7eb;
+}
+
+.checkout-now {
+    flex: 2;
+    padding: 0.75rem;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.checkout-now:hover {
+    background-color: #059669;
 }

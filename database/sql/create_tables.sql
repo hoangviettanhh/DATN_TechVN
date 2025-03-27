@@ -80,6 +80,7 @@ CREATE TABLE orders (
                         id_order_status INT UNSIGNED NOT NULL,
                         total_amount DECIMAL(15, 2) NOT NULL,
                         address TEXT NOT NULL,
+                        payment_method ENUM('cod', 'vnpay') NOT NULL DEFAULT 'cod',
                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                         FOREIGN KEY (id_user) REFERENCES users(id_user),

@@ -7,6 +7,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CheckoutController;
 
 Route::get('/', function () {
     if (!Auth::check()) {
@@ -48,6 +49,12 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/remove/{productId}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     
+    // Checkout routes
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');
+    Route::post('/checkout/place-order', [CheckoutController::class, 'placeOrder'])->name('checkout.place-order');
+    Route::get('/checkout/vnpay-return', [CheckoutController::class, 'vnpayReturn'])->name('checkout.vnpay-return');
+    Route::get('/order/success/{id}', [CheckoutController::class, 'orderSuccess'])->name('order.success');
+
     // Admin routes
     Route::prefix('admin')->group(function () {
         Route::get('/products/create', [AdminController::class, 'create'])->name('admin.products.create');

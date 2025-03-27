@@ -1,13 +1,10 @@
 HƯỚNG DẪN CHẠY PROJECT TECHVN
 
-1. Yêu cầu môi trường:
-   - PHP >= 8.4
-   - Composer (cài bằng: curl -sS https://getcomposer.org/installer | php)
-   - Docker (cài Docker Desktop từ https://www.docker.com/products/docker-desktop/)
-   - Node.js/NPM (cho CSS/JS: brew install node)
 
-2. Cài đặt project:
-   - Sao chép thư mục project vào máy.
-   - Chạy lệnh: composer install (để cài các thư viện PHP).
-     ```bash
-     composer install
+
+npm install -g ngrok
+
+Số thẻ: 9704198526191432198
+Tên chủ thẻ: NGUYEN VAN A
+Ngày phát hành: 07/15
+OTP: 123456

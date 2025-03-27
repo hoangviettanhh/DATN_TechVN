@@ -79,14 +79,16 @@
                         <span class="total-amount">{{ number_format($total ?? 0) }}đ</span>
                     </div>
                     <div class="summary-actions">
+                        <div class="">
                         <button class="clear-cart" onclick="clearCart()">
                             <i class="fas fa-trash"></i>
                             Xóa giỏ hàng
                         </button>
-                        <button class="checkout-button">
-                            <i class="fas fa-lock"></i>
-                            Thanh toán ngay
-                        </button>
+                        </div>
+                        <div class="">
+                        <a href="{{ route('checkout.index') }}" class="checkout-button" style="width: 100%;"><i class="fas fa-lock"></i>Thanh toán ngay</a>
+                        </div>
+
                     </div>
                 </div>
             </div>
@@ -344,6 +346,7 @@
 }
 
 .clear-cart {
+    width: 100%;
     background: white;
     color: #dc3545;
     border: 2px solid #dc3545;

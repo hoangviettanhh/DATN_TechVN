@@ -109,6 +109,8 @@ class CartController extends Controller
                             'price' => $item->product->price,
                             'image' => $item->product->image,
                             'quantity' => $item->quantity,
+                            'storage' => $item->product->storage,
+                            'color' => $item->product->color,
                             'description' => $item->product->description
                         ];
                         $total += $item->product->price * $item->quantity;
