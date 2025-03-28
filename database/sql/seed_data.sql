@@ -15,3 +15,7 @@ INSERT INTO vouchers (code, discount) VALUES
 
 ALTER TABLE orders ADD COLUMN deleted_at TIMESTAMP NULL DEFAULT NULL;
 ALTER TABLE order_details ADD COLUMN deleted_at TIMESTAMP NULL DEFAULT NULL;
+
+ALTER TABLE orders 
+ADD COLUMN payment_details JSON NULL 
+AFTER payment_method;

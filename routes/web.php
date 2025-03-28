@@ -8,6 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\OrderController;
 
 Route::get('/', function () {
     if (!Auth::check()) {
@@ -16,6 +17,7 @@ Route::get('/', function () {
     return redirect()->route('home');
 });
 
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.show');
 
 // Guest routes
@@ -39,7 +41,6 @@ Route::middleware('guest')->group(function () {
 
 // Protected Routes
 Route::middleware('auth')->group(function () {
-    Route::get('/home', [HomeController::class, 'index'])->name('home');
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
     
     // Cart routes
@@ -48,6 +49,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/update/{productId}', [CartController::class, 'update'])->name('cart.update');
     Route::post('/cart/remove/{productId}', [CartController::class, 'remove'])->name('cart.remove');
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
+    
+    // Order routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
     
     // Checkout routes
     Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout.index');

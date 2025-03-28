@@ -20,7 +20,7 @@
                 <span>{{ Auth::user()->name }}</span>
                 <div class="dropdown-menu">
                     <a href="#"><i class="fas fa-user"></i> Thông tin tài khoản</a>
-                    <a href="#"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
+                    <a href="{{ route('orders.index') }}"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
                     @if(Auth::user()->isAdmin())
                         <a href="{{ route('admin.products.create') }}"><i class="fas fa-cog"></i> Quản lý sản phẩm</a>
                     @endif

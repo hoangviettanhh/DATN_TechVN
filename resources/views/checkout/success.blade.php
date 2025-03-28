@@ -63,7 +63,7 @@
                 <i class="fas fa-shopping-cart"></i>
                 Tiếp tục mua sắm
             </a>
-            <a href="#" class="track-order">
+            <a href="{{ route('orders.show', $order->id_order) }}"  class="track-order">
                 <i class="fas fa-truck"></i>
                 Theo dõi đơn hàng
             </a>
