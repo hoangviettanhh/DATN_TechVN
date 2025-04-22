@@ -22,7 +22,11 @@ class Product extends Model
             'quantity',
             'created_by',
             'updated_by',
+            'status'
         ];
+    protected $attributes = [
+        'status' => 1 // 1: active, 0: inactive
+    ];
 
     // Hàm query chung
     public static function queryData($table, $where = [], $select = ['*'], $limit = null)
@@ -49,11 +53,16 @@ class Product extends Model
     }
 
     // Lấy tất cả sản phẩm
-    public static function getProducts($limit = null, $categoryId = null)
+    public static function getProducts($limit = null, $categoryId = null, $ignoreStatus = false)
     {
         $query = DB::table('products')
             ->select('products.*', 'categories.name as category_name')
-            ->leftJoin('categories', 'products.id_category', '=', 'categories.id_category');
+            ->leftJoin('categories', 'products.id_category', '=', 'categories.id_category')
+            ->orderBy('products.created_at', 'desc');
+
+        if (!$ignoreStatus) {
+            $query->where('products.status', 1);
+        }
 
         if ($categoryId) {
             $query->where('products.id_category', '=', $categoryId);
@@ -69,11 +78,11 @@ class Product extends Model
         foreach ($products as $product) {
             $images = DB::table('product_images')
                 ->where('id_product', '=', $product->id_product)
-                ->pluck('image') // Chỉ lấy cột image
-                ->toArray();     // Chuyển thành array
+                ->pluck('image')
+                ->toArray();
 
             $product->images = $images;
-            $product->image = !empty($images) ? $images[0] : '/image/default.jpg'; // Lấy ảnh đầu tiên hoặc default
+            $product->image = !empty($images) ? $images[0] : '/image/default.jpg';
         }
 
         return $products;
@@ -179,5 +188,17 @@ class Product extends Model
     public function productImages()
     {
         return $this->hasMany(ProductImage::class, 'id_product');
+    }
+
+    public function deactivate()
+    {
+        $this->status = 0;
+        return $this->save();
+    }
+
+    public function activate()
+    {
+        $this->status = 1;
+        return $this->save();
     }
 }

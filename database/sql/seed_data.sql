@@ -19,3 +19,7 @@ ALTER TABLE order_details ADD COLUMN deleted_at TIMESTAMP NULL DEFAULT NULL;
 ALTER TABLE orders 
 ADD COLUMN payment_details JSON NULL 
 AFTER payment_method;
+
+-- Thêm cột status vào bảng categories và products
+ALTER TABLE categories ADD COLUMN status TINYINT NOT NULL DEFAULT 1;
+ALTER TABLE products ADD COLUMN status TINYINT NOT NULL DEFAULT 1;
