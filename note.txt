@@ -8,3 +8,106 @@ Số thẻ: 9704198526191432198
 Tên chủ thẻ: NGUYEN VAN A
 Ngày phát hành: 07/15
 OTP: 123456
+
+# Luồng chức năng thêm giỏ hàng và thanh toán
+
+## 1. Thêm sản phẩm vào giỏ hàng
+1. User xem chi tiết sản phẩm (route: `/product/{id}`)
+2. User chọn số lượng và nhấn nút "Thêm vào giỏ hàng"
+3. Client gửi request POST đến `/cart/add` với dữ liệu:
+   - `id_product`: ID của sản phẩm
+   - `quantity`: Số lượng sản phẩm
+4. Controller `CartController@add` xử lý:
+   - Kiểm tra sản phẩm tồn tại
+   - Kiểm tra user đã đăng nhập (Auth::check())
+   - Kiểm tra sản phẩm đã có trong giỏ hàng chưa
+     - Nếu có: cập nhật số lượng
+     - Nếu chưa: thêm mới vào giỏ hàng
+   - Redirect về trang giỏ hàng với thông báo thành công
+
+## 2. Xem giỏ hàng
+1. User truy cập giỏ hàng (route: `/cart`)
+2. Controller `CartController@view` xử lý:
+   - Kiểm tra user đã đăng nhập (Auth middleware)
+   - Lấy tất cả sản phẩm trong giỏ hàng của user hiện tại
+   - Tính tổng tiền
+   - Trả về view `cart.index` với dữ liệu giỏ hàng
+
+## 3. Cập nhật giỏ hàng
+1. User thay đổi số lượng sản phẩm trong giỏ hàng
+2. Client gửi request POST đến `/cart/update/{productId}` với dữ liệu:
+   - `quantity`: Số lượng mới
+3. Controller `CartController@update` xử lý:
+   - Kiểm tra sản phẩm có trong giỏ hàng của user không
+   - Cập nhật số lượng mới
+   - Trả về response JSON với trạng thái và tổng tiền mới
+
+## 4. Xóa sản phẩm khỏi giỏ hàng
+1. User nhấn nút xóa sản phẩm khỏi giỏ hàng
+2. Client gửi request POST đến `/cart/remove/{productId}`
+3. Controller `CartController@remove` xử lý:
+   - Xóa sản phẩm khỏi giỏ hàng
+   - Redirect về trang giỏ hàng với thông báo xóa thành công
+
+## 5. Xóa toàn bộ giỏ hàng
+1. User nhấn nút "Xóa tất cả"
+2. Client gửi request POST đến `/cart/clear`
+3. Controller `CartController@clear` xử lý:
+   - Xóa tất cả sản phẩm trong giỏ hàng của user
+   - Redirect về trang giỏ hàng với thông báo xóa thành công
+
+## 6. Thanh toán
+1. User nhấn nút "Thanh toán" từ trang giỏ hàng
+2. User được chuyển đến trang checkout (route: `/checkout`)
+3. Controller `CheckoutController@index` xử lý:
+   - Kiểm tra user đã đăng nhập (Auth middleware)
+   - Lấy tất cả sản phẩm trong giỏ hàng của user hiện tại
+   - Tính tổng tiền
+   - Trả về view `checkout.index` với dữ liệu giỏ hàng
+4. User nhập thông tin địa chỉ và chọn phương thức thanh toán (COD hoặc VNPay)
+5. User nhấn nút "Đặt hàng"
+6. Client gửi request POST đến `/checkout/place-order` với dữ liệu:
+   - `address`: Địa chỉ giao hàng
+   - `payment_method`: Phương thức thanh toán
+   - `voucher_code` (nếu có): Mã giảm giá
+7. Controller `CheckoutController@placeOrder` xử lý:
+   - Lưu user_id vào session
+   - Tạo đơn hàng mới trong database
+   - Tạo chi tiết đơn hàng cho từng sản phẩm
+   - Xóa giỏ hàng
+   - Nếu thanh toán COD:
+     - Redirect đến trang thành công
+   - Nếu thanh toán VNPay:
+     - Tạo URL thanh toán với VNPay
+     - Redirect đến trang thanh toán VNPay
+
+## 7. Xử lý thanh toán VNPay
+1. User nhập thông tin thanh toán trên trang VNPay
+2. Sau khi thanh toán xong, VNPay redirect về `/checkout/vnpay-return` kèm theo các tham số:
+   - `vnp_ResponseCode`: Mã kết quả (00 = thành công)
+   - `vnp_TxnRef`: Mã đơn hàng
+   - `vnp_Amount`: Số tiền
+   - Các thông tin khác
+3. Controller `CheckoutController@vnpayReturn` xử lý:
+   - Kiểm tra kết quả thanh toán
+   - Nếu thành công:
+     - Cập nhật trạng thái đơn hàng thành "Success"
+     - Lưu thông tin thanh toán
+     - Redirect về trang thành công
+   - Nếu thất bại:
+     - Log thông tin lỗi
+     - Redirect về trang chủ với thông báo lỗi
+
+## 8. Xem đơn hàng
+1. User truy cập trang danh sách đơn hàng (route: `/orders`)
+2. Controller `OrderController@index` xử lý:
+   - Lấy tất cả đơn hàng của user hiện tại
+   - Trả về view `orders.index` với dữ liệu đơn hàng
+
+## 9. Xem chi tiết đơn hàng
+1. User nhấn vào nút "Chi tiết" của một đơn hàng
+2. User được chuyển đến trang chi tiết đơn hàng (route: `/orders/{id}`)
+3. Controller `OrderController@show` xử lý:
+   - Kiểm tra đơn hàng thuộc về user hiện tại
+   - Lấy thông tin chi tiết đơn hàng
+   - Trả về view `orders.show` với dữ liệu chi tiết đơn hàng

@@ -21,9 +21,6 @@
                 <div class="dropdown-menu">
                     <a href="#"><i class="fas fa-user"></i> Thông tin tài khoản</a>
                     <a href="{{ route('orders.index') }}"><i class="fas fa-shopping-bag"></i> Đơn hàng của tôi</a>
-                    @if(Auth::user()->isAdmin())
-                        <a href="{{ route('admin.products.create') }}"><i class="fas fa-cog"></i> Quản lý sản phẩm</a>
-                    @endif
                     <form action="{{ route('logout') }}" method="POST">
                         @csrf
                         <button type="submit"><i class="fas fa-sign-out-alt"></i> Đăng xuất</button>

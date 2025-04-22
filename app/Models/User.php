@@ -30,7 +30,8 @@ class User extends Authenticatable
         'password',
         'address',
         'created_by',
-        'updated_by'
+        'updated_by',
+        'role'
     ];
 
     /**
@@ -62,6 +63,11 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->id_role === 1; // Giả sử role_id 1 là admin
+        return $this->role === 'admin';
+    }
+
+    public function isUser()
+    {
+        return $this->role === 'user';
     }
 }

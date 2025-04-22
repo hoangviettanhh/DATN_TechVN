@@ -341,6 +341,7 @@
 }
 
 .add-to-cart-button {
+    top: 75%;
     background-color: #fff;
     color: #d9534f;
     border: 2px solid #d9534f;

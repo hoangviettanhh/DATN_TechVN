@@ -96,18 +96,23 @@ class CartController extends Controller
             if (Auth::check()) {
                 $userId = Auth::id();
                 
-                // Lấy thông tin giỏ hàng với eager loading product
-                $dbCart = Cart::with('product')
+                // Lấy thông tin giỏ hàng với eager loading product và product_images
+                $dbCart = Cart::with(['product', 'product.productImages'])
                     ->where('id_user', $userId)
                     ->get();
 
                 foreach ($dbCart as $item) {
                     if ($item->product) {
+                        // Lấy ảnh đầu tiên từ productImages hoặc ảnh mặc định nếu không có
+                        $image = $item->product->productImages->first() 
+                            ? $item->product->productImages->first()->image 
+                            : 'image/default.jpg';
+                            
                         $cartItems[] = [
                             'id_product' => $item->id_product,
                             'name' => $item->product->name,
                             'price' => $item->product->price,
-                            'image' => $item->product->image,
+                            'image' => $image,
                             'quantity' => $item->quantity,
                             'storage' => $item->product->storage,
                             'color' => $item->product->color,
@@ -121,13 +126,18 @@ class CartController extends Controller
                 $sessionCart = Session::get('cart', []);
                 
                 foreach ($sessionCart as $productId => $item) {
-                    $product = Product::find($productId);
+                    $product = Product::with('productImages')->find($productId);
                     if ($product) {
+                        // Lấy ảnh đầu tiên từ productImages hoặc ảnh mặc định nếu không có
+                        $image = $product->productImages->first() 
+                            ? $product->productImages->first()->image 
+                            : 'image/default.jpg';
+                            
                         $cartItems[] = [
                             'id_product' => $productId,
                             'name' => $product->name,
                             'price' => $product->price,
-                            'image' => $product->image,
+                            'image' => $image,
                             'quantity' => $item['quantity'],
                             'description' => $product->description
                         ];
@@ -142,7 +152,7 @@ class CartController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            return back()->with('error', 'Có lỗi xảy ra khi hiển thị giỏ hàng');
+            return back()->with('error', 'Có lỗi xảy ra khi hiển thị giỏ hàng: ' . $e->getMessage());
         }
     }
 

@@ -9,6 +9,10 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\Admin\MainController;
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\CategoryController;
+use App\Http\Controllers\Admin\ProductController as AdminProductController;
 
 Route::get('/', function () {
     if (!Auth::check()) {
@@ -62,8 +66,48 @@ Route::middleware('auth')->group(function () {
 
     // Admin routes
     Route::prefix('admin')->group(function () {
-        Route::get('/products/create', [AdminController::class, 'create'])->name('admin.products.create');
-        Route::post('/products', [AdminController::class, 'store'])->name('admin.products.store');
-        Route::post('/add-image', [AdminController::class, 'addImage'])->name('admin.products.addImage');
+        // Guest routes
+        Route::middleware('guest:admin')->group(function () {
+            Route::get('users/login', [LoginController::class, 'showLoginForm'])->name('admin.login');
+            Route::post('users/login/store', [LoginController::class, 'login']);
+            Route::get('users/register', [LoginController::class, 'showRegisterForm'])->name('admin.register');
+            Route::post('users/register/store', [LoginController::class, 'register'])->name('admin.register.post');
+        });
+
+        // Protected routes
+        Route::middleware('auth:admin')->group(function () {
+            Route::get('/', [MainController::class, 'index'])->name('admin.dashboard');
+            Route::get('main', [MainController::class, 'index']);
+            Route::post('logout', [LoginController::class, 'logout'])->name('admin.logout');
+        });
+    });
+
+    // Category Routes
+    Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+        Route::prefix('categories')->group(function () {
+            Route::get('/', [CategoryController::class, 'index'])->name('admin.categories.list');
+            Route::get('/add', [CategoryController::class, 'create'])->name('admin.categories.add');
+            Route::post('/store', [CategoryController::class, 'store'])->name('admin.categories.store');
+            Route::get('/edit/{id}', [CategoryController::class, 'edit'])->name('admin.categories.edit');
+            Route::put('/update/{id}', [CategoryController::class, 'update'])->name('admin.categories.update');
+            Route::delete('/destroy/{id}', [CategoryController::class, 'destroy'])->name('admin.categories.destroy');
+            Route::post('/deactivate/{id}', [CategoryController::class, 'deactivate'])->name('admin.categories.deactivate');
+            Route::post('/activate/{id}', [CategoryController::class, 'activate'])->name('admin.categories.activate');
+        });
+    });
+
+    // Product Routes
+    Route::prefix('admin')->middleware(['auth:admin'])->group(function () {
+        Route::prefix('products')->group(function () {
+            Route::get('/', [AdminProductController::class, 'index'])->name('admin.products.list');
+            Route::get('/add', [AdminProductController::class, 'create'])->name('admin.products.add');
+            Route::post('/store', [AdminProductController::class, 'store'])->name('admin.products.store');
+            Route::get('/edit/{id}', [AdminProductController::class, 'edit'])->name('admin.products.edit');
+            Route::put('/update/{id}', [AdminProductController::class, 'update'])->name('admin.products.update');
+            Route::delete('/destroy/{id}', [AdminProductController::class, 'destroy'])->name('admin.products.destroy');
+            Route::delete('/images/{id}', [AdminProductController::class, 'destroyImage'])->name('admin.products.images.destroy');
+            Route::post('/deactivate/{id}', [AdminProductController::class, 'deactivate'])->name('admin.products.deactivate');
+            Route::post('/activate/{id}', [AdminProductController::class, 'activate'])->name('admin.products.activate');
+        });
     });
 });

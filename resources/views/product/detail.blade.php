@@ -239,6 +239,13 @@
             font-weight: bold;
             color: #000;
             margin-bottom: 10px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            word-wrap: break-word;
+            max-height: 58px;
         }
 
         .product-info .price {
@@ -346,6 +353,12 @@
             color: #d9534f;
             margin: 8px 0;
             text-align: center;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            height: 40px;
         }
 
         .product .discount-price {
@@ -557,6 +570,27 @@
             padding: 5px;
             cursor: pointer;
             margin-right: 5px;
+        }
+
+        /* Thêm responsive */
+        @media (max-width: 768px) {
+            .product-container {
+                flex-direction: column;
+            }
+            
+            .product-info {
+                padding-left: 0;
+                margin-top: 20px;
+            }
+            
+            .product {
+                width: 45%;
+                min-width: 150px;
+            }
+            
+            .thumbnail-container {
+                flex-wrap: wrap;
+            }
         }
     </style>
 
