@@ -82,17 +82,69 @@
         .sidebar-menu > ul > li {
             margin: 5px 0;
         }
+
+        /* Style cho toggle switch */
+        .toggle-switch {
+            display: flex;
+            align-items: center;
+        }
+
+        .toggle-switch input[type="checkbox"] {
+            display: none;
+        }
+
+        .toggle-label {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 0;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-inner {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 26px;
+            height: 26px;
+            background-color: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        input[type="checkbox"]:checked + .toggle-label {
+            background-color: #28a745;
+        }
+
+        input[type="checkbox"]:checked + .toggle-label .toggle-inner {
+            transform: translateX(30px);
+        }
+
+        .toggle-label:active .toggle-inner {
+            width: 35px;
+        }
+
+        .status-text {
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
     </style>
+    @yield('styles')
 </head>
 <body>
     <div class="main-wrapper">
         <div class="header">
             <div class="header-left active">
-                <a href="index.html" class="logo">
-                    <img src="assets/img/logo.png" alt="">
+                <a href="{{ route('admin.dashboard') }}" class="logo">
+                    <img src="{{ asset('assets/img/logo.png') }}" alt="">
                 </a>
-                <a href="index.html" class="logo-small">
-                    <img src="{{ asset('assets/img/icons/product.svg') }}" alt="">
+                <a href="{{ route('admin.dashboard') }}" class="logo-small">
+                    <img src="{{ asset('assets/img/logo-small.png') }}" alt="">
                 </a>
                 <a id="toggle_btn" href="javascript:void(0);"></a>
             </div>
@@ -113,13 +165,13 @@
                         </a>
                         <form action="#">
                             <div class="searchinputs">
-                                <input type="text" placeholder="Search Here ...">
+                                <input type="text" placeholder="Tìm kiếm...">
                                 <div class="search-addon">
-                                    <span><img src="assets/img/icons/closes.svg" alt="img"></span>
+                                    <span><i class="fas fa-times"></i></span>
                                 </div>
                             </div>
                             <a class="btn" id="searchdiv">
-                                <img src="{{ asset('assets/img/icons/search.svg') }}" alt="img">
+                                <i class="fas fa-search"></i>
                             </a>
                         </form>
                     </div>
@@ -161,7 +213,7 @@
                                     <a href="activities.html">
                                         <div class="media d-flex">
                                             <span class="avatar flex-shrink-0">
-                                                <img alt="" src="{{ asset('assets/img/icons/avatar-02.jpg') }}">
+                                                <img alt="" src="{{ asset('assets/img/avatar-17.jpg') }}">
                                             </span>
                                             <div class="media-body flex-grow-1">
                                                 <p class="noti-details">
@@ -186,33 +238,25 @@
                 <li class="nav-item dropdown has-arrow main-drop">
                     <a href="javascript:void(0);" class="dropdown-toggle nav-link userset" data-bs-toggle="dropdown">
                         <span class="user-img">
-                            <img src="assets/img/profiles/avator1.jpg" alt="">
+                            <img src="{{ asset('assets/img/avatar-17.jpg') }}" alt="User Avatar">
                             <span class="status online"></span>
                         </span>
                     </a>
                     <div class="dropdown-menu menu-drop-user">
                         <div class="profilename">
                             <div class="profileset">
-                                <span class="user-img">
-                                    <img src="assets/img/profiles/avator1.jpg" alt="">
-                                    <span class="status online"></span>
-                                </span>
                                 <div class="profilesets">
-                                    <h6>John Doe</h6>
-                                    <h5>Admin</h5>
+                                    <h6>{{ Auth::user()->name }}</h6>
+                                    <h5>{{ Auth::user()->isAdmin() ? 'Quản trị viên' : 'Người dùng' }}</h5>
                                 </div>
                             </div>
                             <hr class="m-0">
-                            <a class="dropdown-item" href="profile.html">
-                                <i class="me-2" data-feather="user"></i> My Profile
-                            </a>
-                            <a class="dropdown-item" href="generalsettings.html">
-                                <i class="me-2" data-feather="settings"></i>Settings
-                            </a>
-                            <hr class="m-0">
-                            <a class="dropdown-item logout pb-0" href="signin.html">
-                                <img src="assets/img/icons/log-out.svg" class="me-2" alt="img">Logout
-                            </a>
+                            <form method="POST" action="{{ route('admin.logout') }}" class="dropdown-item logout pb-0">
+                                @csrf
+                                <button type="submit" class="btn btn-link p-0" style="text-decoration: none;">
+                                    <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </li>
@@ -223,9 +267,12 @@
                     <i class="fa fa-ellipsis-v"></i>
                 </a>
                 <div class="dropdown-menu dropdown-menu-right">
-                    <a class="dropdown-item" href="profile.html">My Profile</a>
-                    <a class="dropdown-item" href="generalsettings.html">Settings</a>
-                    <a class="dropdown-item" href="signin.html">Logout</a>
+                    <form method="POST" action="{{ route('admin.logout') }}">
+                        @csrf
+                        <button type="submit" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt me-2"></i> Đăng xuất
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>
@@ -235,23 +282,44 @@
                 <div id="sidebar-menu" class="sidebar-menu">
                     <ul>
                         <li class="{{ Request::is('admin') ? 'active' : '' }}">
-                            <a href="{{ url('admin') }}">
-                                <img src="{{ asset('assets/img/icons/dashboard.svg') }}" alt="img">
+                            <a href="{{ route('admin.dashboard') }}">
+                                <i class="fas fa-tachometer-alt"></i>
                                 <span>Dashboard</span>
                             </a>
                         </li>
 
                         <li class="{{ Request::is('admin/categories*') ? 'active' : '' }}">
                             <a href="{{ route('admin.categories.list') }}">
-                                <img src="{{ asset('assets/img/icons/product.svg') }}" alt="img">
-                                <span>Danh mục</span>
+                                <i class="fas fa-folder"></i>
+                                <span>Quản lý danh mục</span>
                             </a>
                         </li>
 
                         <li class="{{ Request::is('admin/products*') ? 'active' : '' }}">
                             <a href="{{ route('admin.products.list') }}">
-                                <img src="{{ asset('assets/img/icons/sales1.svg') }}" alt="img">
-                                <span>Sản Phẩm</span>
+                                <i class="fas fa-box"></i>
+                                <span>Quản lý sản phẩm</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ Request::is('admin/users*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.users.list') }}">
+                                <i class="fas fa-users"></i>
+                                <span>Quản lý người dùng</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ Request::is('admin/orders*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.orders.list') }}">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span>Quản lý đơn hàng</span>
+                            </a>
+                        </li>
+
+                        <li class="{{ Request::is('admin/statistics*') ? 'active' : '' }}">
+                            <a href="{{ route('admin.statistics.revenue') }}">
+                                <i class="fas fa-chart-line"></i>
+                                <span>Thống kê doanh số</span>
                             </a>
                         </li>
                     </ul>

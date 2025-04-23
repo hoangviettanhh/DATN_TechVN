@@ -4,6 +4,10 @@
     <div class="row">
         <div class="col">
             <h3 class="page-title">Danh Sách Danh Mục</h3>
+            <ul class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
+                <li class="breadcrumb-item active">Danh Sách Danh Mục</li>
+            </ul>
         </div>
         <div class="col-auto text-end float-end ms-auto">
             <a href="{{ route('admin.categories.add') }}" class="btn btn-primary">
@@ -34,9 +38,10 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @php $i = 1 @endphp
                     @foreach($categories as $category)
                     <tr>
-                        <td>{{ $category->id_category }}</td>
+                        <td>{{ $i++ }}</td>
                         <td>{{ $category->name }}</td>
                         <td>
                             @if($category->status == 1)

@@ -23,3 +23,4 @@ AFTER payment_method;
 -- Thêm cột status vào bảng categories và products
 ALTER TABLE categories ADD COLUMN status TINYINT NOT NULL DEFAULT 1;
 ALTER TABLE products ADD COLUMN status TINYINT NOT NULL DEFAULT 1;
+ALTER TABLE users ADD COLUMN status TINYINT NOT NULL DEFAULT 1;

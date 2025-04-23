@@ -26,7 +26,7 @@ class Product extends Model
         ];
     protected $attributes = [
         'status' => 1 // 1: active, 0: inactive
-    ];
+        ];
 
     // Hàm query chung
     public static function queryData($table, $where = [], $select = ['*'], $limit = null)

@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class LoginController extends Controller
 {
@@ -24,35 +25,38 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'email' => 'required|string|email',
-            'password' => 'required|string'
-        ]);
+        try {
+            $credentials = $request->validate([
+                'email' => 'required|email',
+                'password' => 'required'
+            ], [
+                'email.required' => 'Vui lòng nhập email',
+                'email.email' => 'Email không đúng định dạng',
+                'password.required' => 'Vui lòng nhập mật khẩu'
+            ]);
 
-        if ($validator->fails()) {
-            return redirect()->back()
-                ->withErrors($validator)
-                ->withInput($request->except('password'));
+            if (Auth::attempt($credentials)) {
+                // Kiểm tra xem người dùng có phải là admin không
+                if (Auth::user()->id_role !== 1) {
+                    Auth::logout();
+                    return back()->with('error', 'Bạn không có quyền truy cập trang này.');
+                }
+
+                $request->session()->regenerate();
+                return redirect()->intended('admin/main');
+            }
+
+            return back()->with('error', 'Email hoặc mật khẩu không chính xác.');
+
+        } catch (\Exception $err) {
+            Log::error('Lỗi đăng nhập admin: ' . $err->getMessage());
+            return back()->with('error', 'Đã xảy ra lỗi, vui lòng thử lại sau.');
         }
-
-        $credentials = $request->only('email', 'password');
-        $remember = $request->has('remember');
-
-        if (Auth::guard('admin')->attempt($credentials, $remember)) {
-            $request->session()->regenerate();
-
-            return redirect()->route('admin.dashboard')
-                ->with('success', 'Đăng nhập thành công!');
-        }
-
-        return redirect()->back()
-            ->withErrors(['email' => 'Thông tin đăng nhập không chính xác.'])
-            ->withInput($request->except('password'));
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('admin.login');

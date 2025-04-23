@@ -1,85 +1,163 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng ký tài khoản quản trị</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body style="background-color: #f8f9fa;">
+    <section class="vh-100">
+        <div class="container py-5 h-100">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-xl-10">
+                    <div class="card shadow" style="border-radius: 1rem;">
+                        <div class="row g-0">
+                            <div class="col-md-6 col-lg-5 d-none d-md-block">
+                                <img src="{{ asset('assets/img/login_2.jpg') }}"
+                                    alt="Đăng ký" class="img-fluid h-100" style="border-radius: 1rem 0 0 1rem; object-fit: cover;" />
+                            </div>
+                            <div class="col-md-6 col-lg-7 d-flex align-items-center">
+                                <div class="card-body p-4 p-lg-5">
+                                    @if($errors->any())
+                                        <div class="alert alert-danger">
+                                            <ul class="mb-0">
+                                                @foreach($errors->all() as $error)
+                                                    <li>{{ $error }}</li>
+                                                @endforeach
+                                            </ul>
+                                        </div>
+                                    @endif
 
-<section class="vh-100" style="background-color:rgb(255, 255, 255);">
-  <div class="container py-5 h-100">
-    <div class="row d-flex justify-content-center align-items-center h-100">
-      <div class="col col-xl-10">
-        <div class="card" style="border-radius: 1rem;">
-          <div class="row g-0">
-            <div class="col-md-6 col-lg-5 d-none d-md-block">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp"
-                alt="login form" class="img-fluid" style="width: 100%; height: 100%;" />
+                                    @if(session('error'))
+                                        <div class="alert alert-danger">
+                                            {{ session('error') }}
+                                        </div>
+                                    @endif
+
+                                    <form action="{{ route('admin.register.store') }}" method="POST" id="registerForm">
+                                        @csrf
+                                        <div class="text-center mb-4">
+                                            <i class="fas fa-user-plus fa-3x text-primary mb-3"></i>
+                                            <h4 class="fw-bold">Đăng ký tài khoản quản trị</h4>
+                                            <p class="text-muted">Vui lòng điền đầy đủ thông tin</p>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="name" class="form-control @error('name') is-invalid @enderror"
+                                                id="name" placeholder="Họ và tên" value="{{ old('name') }}" required>
+                                            <label for="name">Họ và tên</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="email" name="email" class="form-control @error('email') is-invalid @enderror"
+                                                id="email" placeholder="name@example.com" value="{{ old('email') }}" required>
+                                            <label for="email">Email</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="tel" name="phone" class="form-control @error('phone') is-invalid @enderror"
+                                                id="phone" placeholder="Số điện thoại" value="{{ old('phone') }}" required
+                                                pattern="[0-9]{10}" title="Vui lòng nhập số điện thoại 10 chữ số">
+                                            <label for="phone">Số điện thoại</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="text" name="address" class="form-control @error('address') is-invalid @enderror"
+                                                id="address" placeholder="Địa chỉ" value="{{ old('address') }}" required>
+                                            <label for="address">Địa chỉ</label>
+                                        </div>
+
+                                        <div class="form-floating mb-3">
+                                            <input type="password" name="password" class="form-control @error('password') is-invalid @enderror"
+                                                id="password" placeholder="Mật khẩu" required minlength="8">
+                                            <label for="password">Mật khẩu</label>
+                                            <div class="position-relative" style="top:-28px">
+                                                <i class="fas fa-eye position-absolute end-0 top-50 translate-middle-y me-3 text-muted" 
+                                                   style="cursor: pointer;" onclick="togglePassword('password', this)"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-floating mb-4">
+                                            <input type="password" name="password_confirmation" class="form-control"
+                                                id="password_confirmation" placeholder="Xác nhận mật khẩu" required minlength="8">
+                                            <label for="password_confirmation">Xác nhận mật khẩu</label>
+                                            <div class="position-relative" style="top:-28px">
+                                                <i class="fas fa-eye position-absolute end-0 top-50 translate-middle-y me-3 text-muted" 
+                                                   style="cursor: pointer;" onclick="togglePassword('password_confirmation', this)"></i>
+                                            </div>
+                                        </div>
+
+                                        <div class="d-grid gap-2 mb-4">
+                                            <button type="submit" class="btn btn-primary btn-lg">
+                                                <i class="fas fa-user-plus me-2"></i>Đăng ký
+                                            </button>
+                                        </div>
+
+                                        <div class="text-center">
+                                            <p class="mb-0">Đã có tài khoản? 
+                                                <a href="{{ route('admin.login') }}" class="text-primary fw-bold">Đăng nhập</a>
+                                            </p>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 col-lg-7 d-flex align-items-center">
-              <div class="card-body p-4 p-lg-5 text-black">
-
-              @include('admin.alert.alert-not-enter')
-
-              <form action="{{ route('admin.register.post') }}" method="POST">                 
-              @csrf                 
-
-                  <div class="d-flex align-items-center mb-3 pb-1">
-                    <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
-                    <!-- <span class="h1 fw-bold mb-0">Logo</span> -->
-                  </div>
-
-                  <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Đăng Ký Tài Khoản</h5>
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example17">Họ và tên</label>
-                    <input name="name" type="text" id="form2Example17" 
-                    class="form-control form-control-lg" 
-                    value="{{ old('name') }}" 
-                    />                   
-                  </div>
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example17">Email</label>
-                    <input name="email" type="email" id="form2Example17" 
-                    class="form-control form-control-lg" 
-                    value="{{ old('email') }}" 
-                    />                   
-                  </div>
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example17">Số điện thoại</label>
-                    <input name="phone" type="tel" id="form2Example17" 
-                    class="form-control form-control-lg" 
-                    value="{{ old('phone') }}" 
-                    />                   
-                  </div>
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example17">Số điện thoại</label>
-                    <input name="address" type="tel" id="form2Example17" 
-                    class="form-control form-control-lg" 
-                    value="{{ old('address') }}" 
-                    />                   
-                  </div>
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example27">Mật khẩu</label>
-                    <input name="password" placeholder="" type="password" id="form2Example27" 
-                    class="form-control form-control-lg" 
-                    value="{{ old('password') }}" 
-                    />
-                  </div>
-                  <div data-mdb-input-init class="form-outline mb-4">
-                    <label class="form-label" for="form2Example27">Xác nhận mật khẩu</label>
-                    <input name="password_confirmation" placeholder="" type="password" id="form2Example27" 
-                    class="form-control form-control-lg" 
-                    value="{{ old('password_confirmation') }}" 
-                    />
-                  </div>
-                  <div class="pt-1 mb-4">
-                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
-                  </div>
-
-                  <a href="#!" class="small text-muted">Terms of use.</a>
-                  <a href="#!" class="small text-muted">Privacy policy</a>
-                </form>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        function togglePassword(inputId, icon) {
+            const passwordInput = document.getElementById(inputId);
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        // Form validation
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            const password = document.getElementById('password');
+            const confirmPassword = document.getElementById('password_confirmation');
+            const phone = document.getElementById('phone');
+
+            if (password.value !== confirmPassword.value) {
+                e.preventDefault();
+                alert('Mật khẩu xác nhận không khớp!');
+                return false;
+            }
+
+            if (password.value.length < 8) {
+                e.preventDefault();
+                alert('Mật khẩu phải có ít nhất 8 ký tự!');
+                return false;
+            }
+
+            if (!phone.value.match(/^[0-9]{10}$/)) {
+                e.preventDefault();
+                alert('Số điện thoại không hợp lệ!');
+                return false;
+            }
+        });
+
+        // Tự động ẩn thông báo sau 5 giây
+        setTimeout(function() {
+            const alerts = document.querySelectorAll('.alert');
+            alerts.forEach(function(alert) {
+                alert.style.display = 'none';
+            });
+        }, 5000);
+    </script>
+</body>
+</html> 
